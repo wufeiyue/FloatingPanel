@@ -1,14 +1,18 @@
 //
-//  Created by Shin Yamamoto on 2018/09/18.
-//  Copyright © 2018 Shin Yamamoto. All rights reserved.
+//  ViewTests.swift
+//  FloatingPanelTests
+//
+//  Created by Shin Yamamoto on 2018/11/01.
+//  Copyright © 2018 scenee. All rights reserved.
 //
 
 import XCTest
-@testable import FloatingPanelController
 
 class ViewTests: XCTestCase {
+    override func setUp() { }
 
-    override func setUp() {}
+    override func tearDown() { }
 
-    override func tearDown() {}
+    func testSurfaceView() {
+    }
 }
