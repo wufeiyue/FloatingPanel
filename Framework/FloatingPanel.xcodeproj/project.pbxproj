@@ -12,7 +12,6 @@
 		5450EEE421646DF500135936 /* FloatingPanelBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5450EEE321646DF500135936 /* FloatingPanelBehavior.swift */; };
 		545DB9CB2151169500CA77B8 /* FloatingPanel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 545DB9C12151169500CA77B8 /* FloatingPanel.framework */; };
 		545DB9D02151169500CA77B8 /* ViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545DB9CF2151169500CA77B8 /* ViewTests.swift */; };
-		545DB9D22151169500CA77B8 /* FloatingPanelController.h in Headers */ = {isa = PBXBuildFile; fileRef = 545DB9C42151169500CA77B8 /* FloatingPanelController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		545DB9DE215118C800CA77B8 /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545DB9DD215118C800CA77B8 /* UIExtensions.swift */; };
 		545DB9E021511AC100CA77B8 /* FloatingPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545DB9DF21511AC100CA77B8 /* FloatingPanelController.swift */; };
 		545DBA2B2152383100CA77B8 /* GrabberHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545DBA2A2152383100CA77B8 /* GrabberHandleView.swift */; };
@@ -21,6 +20,9 @@
 		54CDC5D5215B6D8D007D205C /* FloatingPanelBackdropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CDC5D4215B6D8D007D205C /* FloatingPanelBackdropView.swift */; };
 		54CFBFC3215CD045006B5735 /* FloatingPanelLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CFBFC2215CD045006B5735 /* FloatingPanelLayout.swift */; };
 		54CFBFC5215CD09C006B5735 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CFBFC4215CD09C006B5735 /* FloatingPanel.swift */; };
+		54E6C52B21E07D4C00EB7034 /* FloatingPanelPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E6C52A21E07D4C00EB7034 /* FloatingPanelPosition.m */; };
+		54E6C52D21E07EFE00EB7034 /* FloatingPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E6C52C21E07EDA00EB7034 /* FloatingPanel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54E6C52E21E07F1A00EB7034 /* FloatingPanelPosition.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E6C52921E07D4C00EB7034 /* FloatingPanelPosition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +40,6 @@
 		54352E9721A521CA00CBCA08 /* FloatingPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelView.swift; sourceTree = "<group>"; };
 		5450EEE321646DF500135936 /* FloatingPanelBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelBehavior.swift; sourceTree = "<group>"; };
 		545DB9C12151169500CA77B8 /* FloatingPanel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FloatingPanel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		545DB9C42151169500CA77B8 /* FloatingPanelController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FloatingPanelController.h; sourceTree = "<group>"; };
 		545DB9C52151169500CA77B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		545DB9CA2151169500CA77B8 /* FloatingPanelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FloatingPanelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		545DB9CF2151169500CA77B8 /* ViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTests.swift; sourceTree = "<group>"; };
@@ -51,6 +52,9 @@
 		54CDC5D4215B6D8D007D205C /* FloatingPanelBackdropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelBackdropView.swift; sourceTree = "<group>"; };
 		54CFBFC2215CD045006B5735 /* FloatingPanelLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelLayout.swift; sourceTree = "<group>"; };
 		54CFBFC4215CD09C006B5735 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
+		54E6C52921E07D4C00EB7034 /* FloatingPanelPosition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FloatingPanelPosition.h; path = /Users/shin/Workspace/scenee/floatingpanel/FloatingPanel/Framework/Sources/FloatingPanelPosition.h; sourceTree = "<absolute>"; };
+		54E6C52A21E07D4C00EB7034 /* FloatingPanelPosition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FloatingPanelPosition.m; path = /Users/shin/Workspace/scenee/floatingpanel/FloatingPanel/Framework/Sources/FloatingPanelPosition.m; sourceTree = "<absolute>"; };
+		54E6C52C21E07EDA00EB7034 /* FloatingPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FloatingPanel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				545DB9C52151169500CA77B8 /* Info.plist */,
-				545DB9C42151169500CA77B8 /* FloatingPanelController.h */,
+				54E6C52C21E07EDA00EB7034 /* FloatingPanel.h */,
 				545DB9DF21511AC100CA77B8 /* FloatingPanelController.swift */,
 				54352E9521A51A2500CBCA08 /* FloatingPanelTransitioning.swift */,
 				54CFBFC4215CD09C006B5735 /* FloatingPanel.swift */,
@@ -106,6 +110,8 @@
 				545DBA2A2152383100CA77B8 /* GrabberHandleView.swift */,
 				545DB9DD215118C800CA77B8 /* UIExtensions.swift */,
 				54ABD7AE216CCFF7002E6C13 /* Logger.swift */,
+				54E6C52921E07D4C00EB7034 /* FloatingPanelPosition.h */,
+				54E6C52A21E07D4C00EB7034 /* FloatingPanelPosition.m */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -126,7 +132,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				545DB9D22151169500CA77B8 /* FloatingPanelController.h in Headers */,
+				54E6C52D21E07EFE00EB7034 /* FloatingPanel.h in Headers */,
+				54E6C52E21E07F1A00EB7034 /* FloatingPanelPosition.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +242,7 @@
 				54CFBFC5215CD09C006B5735 /* FloatingPanel.swift in Sources */,
 				54ABD7AF216CCFF7002E6C13 /* Logger.swift in Sources */,
 				545DB9E021511AC100CA77B8 /* FloatingPanelController.swift in Sources */,
+				54E6C52B21E07D4C00EB7034 /* FloatingPanelPosition.m in Sources */,
 				5450EEE421646DF500135936 /* FloatingPanelBehavior.swift in Sources */,
 				545DBA2B2152383100CA77B8 /* GrabberHandleView.swift in Sources */,
 				54352E9621A51A2500CBCA08 /* FloatingPanelTransitioning.swift in Sources */,

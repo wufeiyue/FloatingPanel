@@ -51,13 +51,14 @@ public extension FloatingPanelControllerDelegate {
     func floatingPanel(_ vc: FloatingPanelController, shouldRecognizeSimultaneouslyWith gestureRecognizer: UIGestureRecognizer) -> Bool { return false }
 }
 
-
-public enum FloatingPanelPosition: Int {
+/*
+@objc public enum FloatingPanelPosition: Int {
     case full
     case half
     case tip
     case hidden
 }
+ */
 
 ///
 /// A container view controller to display a floating panel to present contents in parallel as a user wants.
