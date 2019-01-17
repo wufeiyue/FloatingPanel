@@ -252,6 +252,8 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
                     scrollView.contentOffset.y = initialScrollOffset.y
                 case .hidden:
                     fatalError("A floating panel hidden must not be used by a user")
+                default:
+                    fatalError("")
                 }
 
                 // Always hide a scroll indicator at the non-top.
@@ -560,6 +562,8 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
             return CGFloat(fabs(Double(currentY - bottomY)))
         case .hidden:
             fatalError("A floating panel hidden must not be used by a user")
+        default:
+            fatalError("")
         }
     }
 
@@ -594,6 +598,8 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
                 return currentY > middleY ? .half : .full
             case .hidden:
                 fatalError("A floating panel hidden must not be used by a user")
+            default:
+                fatalError("")
             }
         }
     }
@@ -623,6 +629,8 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
                 return currentY > middleY ? .tip : .half
             case .hidden:
                 fatalError("A floating panel hidden must not be used by a user")
+            default:
+                fatalError("")
             }
         }
     }
@@ -677,6 +685,8 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
                 forwardYDirection = false
             case .hidden:
                 fatalError("A floating panel hidden must not be used by a user")
+            default:
+                fatalError("")
             }
 
             let redirectionalProgress = max(min(behavior.redirectionalProgress(viewcontroller, from: state, to: target), 1.0), 0.0)

@@ -214,6 +214,8 @@ class FloatingPanelLayoutAdapter {
             return bottomY
         case .hidden:
             return hiddenY
+        default:
+            return 0.0
         }
     }
 
@@ -341,6 +343,8 @@ class FloatingPanelLayoutAdapter {
             NSLayoutConstraint.activate(tipConstraints)
         case .hidden:
             NSLayoutConstraint.activate(offConstraints)
+        default:
+            break
         }
     }
 
