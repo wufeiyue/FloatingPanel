@@ -20,11 +20,13 @@ jobs:
     osx_image: xcode9.4
     script:
     - xcodebuild -scheme FloatingPanel clean build
+    - xcodebuild -scheme FloatingPanelObjC clean build
 
   - stage: Build framework(swift 4.2)
     osx_image: xcode10
     script:
     - xcodebuild -scheme FloatingPanel clean build
+    - xcodebuild -scheme FloatingPanelObjC clean build
 
   - stage: Carthage
     osx_image: xcode10
@@ -37,7 +39,8 @@ jobs:
   - stage: Podspec
     osx_image: xcode10
     script:
-    - pod spec lint
+    - pod spec lint FloatingPanel.podspec
+    - pod spec lint FloatingPanelObjC.podspec
 
   - stage: Build maps example
     osx_image: xcode10
@@ -53,3 +56,8 @@ jobs:
     osx_image: xcode10
     script:
     - xcodebuild -scheme Samples -sdk iphonesimulator clean build
+
+  - stage: Build samples(objc) example
+    osx_image: xcode10
+    script:
+    - xcodebuild -scheme SamplesObjC -sdk iphonesimulator clean build
