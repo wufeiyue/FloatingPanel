@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@import FloatingPanel;
+@import FloatingPanelObjC;
 
 @interface ViewController : UIViewController<FloatingPanelControllerDelegate>
 

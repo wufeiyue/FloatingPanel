@@ -27,7 +27,13 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
     weak var userScrollViewDelegate: UIScrollViewDelegate?
 
     private(set) var state: FloatingPanelPosition = .hidden {
-        didSet { viewcontroller.delegate?.floatingPanelDidChangePosition(viewcontroller) }
+        didSet {
+            #if __OBJC__
+            viewcontroller.delegate?.floatingPanelDidChangePosition?(viewcontroller)
+            #else
+            viewcontroller.delegate?.floatingPanelDidChangePosition(viewcontroller)
+            #endif
+        }
     }
 
     private var isBottomState: Bool {
@@ -149,7 +155,12 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
 
         /* log.debug("shouldRecognizeSimultaneouslyWith", otherGestureRecognizer) */
 
-        if viewcontroller.delegate?.floatingPanel(viewcontroller, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false {
+        #if __OBJC__
+        let shouldRecognizeOtherGesture = viewcontroller.delegate?.floatingPanel?(viewcontroller, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false
+        #else
+        let shouldRecognizeOtherGesture = viewcontroller.delegate?.floatingPanel(viewcontroller, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false
+        #endif
+        if shouldRecognizeOtherGesture {
             return true
         }
 
@@ -185,10 +196,14 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
             }
         }
 
-        if viewcontroller.delegate?.floatingPanel(viewcontroller, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false {
+        #if __OBJC__
+        let shouldRecognizeOtherGesture = viewcontroller.delegate?.floatingPanel?(viewcontroller, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false
+        #else
+        let shouldRecognizeOtherGesture = viewcontroller.delegate?.floatingPanel(viewcontroller, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false
+        #endif
+        if shouldRecognizeOtherGesture {
             return false
         }
-
 
         switch otherGestureRecognizer {
         case is UIPanGestureRecognizer,
@@ -357,7 +372,11 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         surfaceView.frame = frame
         backdropView.alpha = getBackdropAlpha(with: translation)
 
+        #if __OBJC__
+        viewcontroller.delegate?.floatingPanelDidMove?(viewcontroller)
+        #else
         viewcontroller.delegate?.floatingPanelDidMove(viewcontroller)
+        #endif
     }
 
     private func panningEnd(with translation: CGPoint, velocity: CGPoint) {
@@ -387,20 +406,33 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
 
             if shouldStartRemovalAnimation(with: translation, velocityVector: velocityVector) {
 
+                #if __OBJC__
+                viewcontroller.delegate?.floatingPanelDidEndDraggingToRemove?(viewcontroller, withVelocity: velocity)
+                #else
                 viewcontroller.delegate?.floatingPanelDidEndDraggingToRemove(viewcontroller, withVelocity: velocity)
+                #endif
                 self.startRemovalAnimation(with: velocityVector) { [weak self] in
                     guard let `self` = self else { return }
                     self.viewcontroller.dismiss(animated: false, completion: { [weak self] in
                         guard let `self` = self else { return }
+                        #if __OBJC__
+                        self.viewcontroller.delegate?.floatingPanelDidEndRemove?(self.viewcontroller)
+                        #else
                         self.viewcontroller.delegate?.floatingPanelDidEndRemove(self.viewcontroller)
+                        #endif
                     })
                 }
                 return
             }
         }
 
+        #if __OBJC__
+        viewcontroller.delegate?.floatingPanelDidEndDragging?(viewcontroller, withVelocity: velocity, targetPosition: targetPosition)
+        viewcontroller.delegate?.floatingPanelWillBeginDecelerating?(viewcontroller)
+        #else
         viewcontroller.delegate?.floatingPanelDidEndDragging(viewcontroller, withVelocity: velocity, targetPosition: targetPosition)
         viewcontroller.delegate?.floatingPanelWillBeginDecelerating(viewcontroller)
+        #endif
 
         startAnimation(to: targetPosition, at: distance, with: velocity)
     }
@@ -442,7 +474,11 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         }
         transOffsetY = translation.y
 
+        #if __OBJC__
+        viewcontroller.delegate?.floatingPanelWillBeginDragging?(viewcontroller)
+        #else
         viewcontroller.delegate?.floatingPanelWillBeginDragging(viewcontroller)
+        #endif
 
         if state == .full {
             viewcontroller.contentViewController?.view?.constraints.forEach({ (const) in
@@ -538,7 +574,11 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
     private func finishAnimation(at targetPosition: FloatingPanelPosition) {
         log.debug("finishAnimation \(targetPosition)")
         self.animator = nil
+        #if __OBJC__
+        self.viewcontroller.delegate?.floatingPanelDidEndDecelerating?(self.viewcontroller)
+        #else
         self.viewcontroller.delegate?.floatingPanelDidEndDecelerating(self.viewcontroller)
+        #endif
 
         stopScrollDeceleration = false
         // Don't unlock scroll view in animating view when presentation layer != model layer

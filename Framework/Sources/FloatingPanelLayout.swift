@@ -27,6 +27,7 @@ public extension FloatingPanelIntrinsicLayout {
     }
 }
 
+#if !__OBJC__
 public protocol FloatingPanelLayout: class {
     /// Returns the initial position of a floating panel.
     var initialPosition: FloatingPanelPosition { get }
@@ -84,18 +85,26 @@ public extension FloatingPanelLayout {
         return position == .full ? 0.3 : 0.0
     }
 }
+#endif
+
+#if __OBJC__
+public typealias FPFloat = NSNumber
+#else
+public typealias FPFloat = CGFloat
+#endif
 
 public class FloatingPanelDefaultLayout: FloatingPanelLayout {
     public var initialPosition: FloatingPanelPosition {
         return .half
     }
 
-    public func insetFor(position: FloatingPanelPosition) -> CGFloat? {
+    public func insetFor(position: FloatingPanelPosition) -> FPFloat? {
         switch position {
         case .full: return 18.0
         case .half: return 262.0
         case .tip: return 69.0
-        case .hidden: return nil
+        default:
+            return nil
         }
     }
 }
@@ -108,7 +117,7 @@ public class FloatingPanelDefaultLandscapeLayout: FloatingPanelLayout {
         return [.full, .tip]
     }
 
-    public func insetFor(position: FloatingPanelPosition) -> CGFloat? {
+    public func insetFor(position: FloatingPanelPosition) -> FPFloat? {
         switch position {
         case .full: return 16.0
         case .tip: return 69.0
@@ -117,6 +126,43 @@ public class FloatingPanelDefaultLandscapeLayout: FloatingPanelLayout {
     }
 }
 
+#if __OBJC__
+public extension FloatingPanelDefaultLayout {
+    var supportedPositions: Set<FloatingPanelPosition> {
+        return Set([.full, .half, .tip])
+    }
+
+    var topInteractionBuffer: CGFloat { return 6.0 }
+    var bottomInteractionBuffer: CGFloat { return 6.0 }
+
+    func prepareLayout(surfaceView: UIView, in view: UIView) -> [NSLayoutConstraint] {
+        return [
+            surfaceView.leftAnchor.constraint(equalTo: view.sideLayoutGuide.leftAnchor, constant: 0.0),
+            surfaceView.rightAnchor.constraint(equalTo: view.sideLayoutGuide.rightAnchor, constant: 0.0),
+        ]
+    }
+
+    func backdropAlphaFor(position: FloatingPanelPosition) -> CGFloat {
+        return position == .full ? 0.3 : 0.0
+    }
+}
+
+public extension FloatingPanelDefaultLandscapeLayout {
+    var topInteractionBuffer: CGFloat { return 6.0 }
+    var bottomInteractionBuffer: CGFloat { return 6.0 }
+
+    func prepareLayout(surfaceView: UIView, in view: UIView) -> [NSLayoutConstraint] {
+        return [
+            surfaceView.leftAnchor.constraint(equalTo: view.sideLayoutGuide.leftAnchor, constant: 0.0),
+            surfaceView.rightAnchor.constraint(equalTo: view.sideLayoutGuide.rightAnchor, constant: 0.0),
+        ]
+    }
+
+    func backdropAlphaFor(position: FloatingPanelPosition) -> CGFloat {
+        return position == .full ? 0.3 : 0.0
+    }
+}
+#endif
 
 class FloatingPanelLayoutAdapter {
     weak var vc: UIViewController!
@@ -143,17 +189,33 @@ class FloatingPanelLayoutAdapter {
         if layout is FloatingPanelIntrinsicLayout {
             return intrinsicHeight
         } else {
+            #if __OBJC__
+            return CGFloat(truncating: layout.insetFor(position: .full) ?? 0.0)
+            #else
             return layout.insetFor(position: .full) ?? 0.0
+            #endif
         }
     }
     private var halfInset: CGFloat {
+        #if __OBJC__
+        return CGFloat(truncating: layout.insetFor(position: .half) ?? 0.0)
+        #else
         return layout.insetFor(position: .half) ?? 0.0
+        #endif
     }
     private var tipInset: CGFloat {
+        #if __OBJC__
+        return CGFloat(truncating: layout.insetFor(position: .tip) ?? 0.0)
+        #else
         return layout.insetFor(position: .tip) ?? 0.0
+        #endif
     }
     private var hiddenInset: CGFloat {
+        #if __OBJC__
+        return CGFloat(truncating: layout.insetFor(position: .hidden) ?? 0.0)
+        #else
         return layout.insetFor(position: .hidden) ?? 0.0
+        #endif
     }
 
     var supportedPositions: Set<FloatingPanelPosition> {

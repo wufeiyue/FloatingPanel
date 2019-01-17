@@ -13,19 +13,18 @@
 		545BA70E21BA3217007F7846 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 545BA70D21BA3217007F7846 /* Assets.xcassets */; };
 		545BA71121BA3217007F7846 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 545BA70F21BA3217007F7846 /* LaunchScreen.storyboard */; };
 		545BA71421BA3217007F7846 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 545BA71321BA3217007F7846 /* main.m */; };
-		545BA72421BA3867007F7846 /* FloatingPanelAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545BA72321BA3867007F7846 /* FloatingPanelAdapter.swift */; };
-		545BA72621BA3BAF007F7846 /* FloatingPanel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 545BA72521BA3BAF007F7846 /* FloatingPanel.framework */; };
-		545BA72721BA3BAF007F7846 /* FloatingPanel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 545BA72521BA3BAF007F7846 /* FloatingPanel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		54E6C55821E09DEF00EB7034 /* FloatingPanelObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E6C55721E09DEF00EB7034 /* FloatingPanelObjC.framework */; };
+		54E6C55921E09DEF00EB7034 /* FloatingPanelObjC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54E6C55721E09DEF00EB7034 /* FloatingPanelObjC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		545BA72821BA3BAF007F7846 /* Embed Frameworks */ = {
+		54E6C55621E09DC800EB7034 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				545BA72721BA3BAF007F7846 /* FloatingPanel.framework in Embed Frameworks */,
+				54E6C55921E09DEF00EB7034 /* FloatingPanelObjC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,8 +43,7 @@
 		545BA71221BA3217007F7846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		545BA71321BA3217007F7846 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		545BA72221BA3867007F7846 /* SamplesObjC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SamplesObjC-Bridging-Header.h"; sourceTree = "<group>"; };
-		545BA72321BA3867007F7846 /* FloatingPanelAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelAdapter.swift; sourceTree = "<group>"; };
-		545BA72521BA3BAF007F7846 /* FloatingPanel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FloatingPanel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		54E6C55721E09DEF00EB7034 /* FloatingPanelObjC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FloatingPanelObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				545BA72621BA3BAF007F7846 /* FloatingPanel.framework in Frameworks */,
+				54E6C55821E09DEF00EB7034 /* FloatingPanelObjC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +61,7 @@
 		545BA6F821BA3214007F7846 = {
 			isa = PBXGroup;
 			children = (
-				545BA72521BA3BAF007F7846 /* FloatingPanel.framework */,
+				54E6C55721E09DEF00EB7034 /* FloatingPanelObjC.framework */,
 				545BA70321BA3214007F7846 /* SamplesObjC */,
 				545BA70221BA3214007F7846 /* Products */,
 			);
@@ -89,7 +87,6 @@
 				545BA70F21BA3217007F7846 /* LaunchScreen.storyboard */,
 				545BA71221BA3217007F7846 /* Info.plist */,
 				545BA71321BA3217007F7846 /* main.m */,
-				545BA72321BA3867007F7846 /* FloatingPanelAdapter.swift */,
 				545BA72221BA3867007F7846 /* SamplesObjC-Bridging-Header.h */,
 			);
 			path = SamplesObjC;
@@ -105,7 +102,7 @@
 				545BA6FD21BA3214007F7846 /* Sources */,
 				545BA6FE21BA3214007F7846 /* Frameworks */,
 				545BA6FF21BA3214007F7846 /* Resources */,
-				545BA72821BA3BAF007F7846 /* Embed Frameworks */,
+				54E6C55621E09DC800EB7034 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -169,7 +166,6 @@
 			files = (
 				545BA70921BA3214007F7846 /* ViewController.m in Sources */,
 				545BA71421BA3217007F7846 /* main.m in Sources */,
-				545BA72421BA3867007F7846 /* FloatingPanelAdapter.swift in Sources */,
 				545BA70621BA3214007F7846 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
