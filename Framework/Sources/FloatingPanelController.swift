@@ -99,11 +99,19 @@ public class FloatingPanelController: UIViewController, UIScrollViewDelegate, UI
     }
 
     /// Initialize a newly created floating panel controller.
+    #if __OBJC__
     @objc public init(delegate: FloatingPanelControllerDelegate? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         setUp()
     }
+    #else
+    public init(delegate: FloatingPanelControllerDelegate? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.delegate = delegate
+        setUp()
+    }
+    #endif
 
     private func setUp() {
         _ = FloatingPanelController.dismissSwizzling
