@@ -57,6 +57,9 @@ public protocol FloatingPanelBehavior {
     ///
     /// Default is a spring animator with 1.0 damping ratio. This method is called when FloatingPanelController.isRemovalInteractionEnabled is true.
     func removalInteractionAnimator(_ fpc: FloatingPanelController, with velocity: CGVector) -> UIViewPropertyAnimator
+
+
+    func useRubberbanding(for edge: UIRectEdge) -> Bool
 }
 
 public extension FloatingPanelBehavior {
@@ -79,7 +82,7 @@ public extension FloatingPanelBehavior {
         return 0.5
     }
 
-    public func interactionAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> UIViewPropertyAnimator {
+    func interactionAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> UIViewPropertyAnimator {
         return defaultBehavior.interactionAnimator(fpc, to: targetPosition, with: velocity)
     }
 
@@ -109,6 +112,10 @@ public extension FloatingPanelBehavior {
                                         frequencyResponse: 0.3,
                                         initialVelocity: velocity)
         return UIViewPropertyAnimator(duration: 0, timingParameters: timing)
+    }
+
+    func useRubberbanding(for edge: UIRectEdge) -> Bool {
+        return true
     }
 }
 

@@ -419,7 +419,8 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         let dy = translation.y - initialTranslationY
 
         layoutAdapter.updateInteractiveTopConstraint(diff: dy,
-                                                     allowsTopBuffer: allowsTopBuffer(for: dy))
+                                                     allowsTopBuffer: allowsTopBuffer(for: dy),
+                                                     with: behavior.useRubberbanding)
 
         backdropView.alpha = getBackdropAlpha(with: translation)
         preserveContentVCLayoutIfNeeded()
