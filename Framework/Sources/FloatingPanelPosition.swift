@@ -6,7 +6,8 @@
 import Foundation
 
 #if !__OBJC__
-@objc public enum FloatingPanelPosition: Int {
+@objc
+public enum FloatingPanelPosition: Int {
     case full
     case half
     case tip

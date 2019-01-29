@@ -11,6 +11,11 @@ import UIKit
 ///     `insetFor(position:)` must return `nil` for full position because the inset is determined automatically.
 ///     You can customize insets only for half, tip and hidden positions
 ///     on FloatingPanelIntrinsicLayout.
+
+#if __OBJC__
+@objc
+public protocol FloatingPanelIntrinsicLayout: FloatingPanelLayout { }
+#else
 public protocol FloatingPanelIntrinsicLayout: FloatingPanelLayout { }
 
 public extension FloatingPanelIntrinsicLayout {
@@ -26,6 +31,7 @@ public extension FloatingPanelIntrinsicLayout {
         return nil
     }
 }
+#endif
 
 #if !__OBJC__
 public protocol FloatingPanelLayout: class {

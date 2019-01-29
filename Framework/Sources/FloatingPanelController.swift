@@ -10,7 +10,8 @@ import UIKit
 ///
 public class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     /// Constants indicating how safe area insets are added to the adjusted content inset.
-    @objc public enum ContentInsetAdjustmentBehavior: Int {
+    @objc
+    public enum ContentInsetAdjustmentBehavior: Int {
         case always
         case never
     }
@@ -32,27 +33,32 @@ public class FloatingPanelController: UIViewController, UIScrollViewDelegate, UI
     #endif
 
     /// Returns the surface view managed by the controller object. It's the same as `self.view`.
-    @objc public var surfaceView: FloatingPanelSurfaceView! {
+    @objc
+    public var surfaceView: FloatingPanelSurfaceView! {
         return floatingPanel.surfaceView
     }
 
     /// Returns the backdrop view managed by the controller object.
-    @objc public var backdropView: FloatingPanelBackdropView! {
+    @objc
+    public var backdropView: FloatingPanelBackdropView! {
         return floatingPanel.backdropView
     }
 
     /// Returns the scroll view that the controller tracks.
-    @objc public weak var scrollView: UIScrollView? {
+    @objc
+    public weak var scrollView: UIScrollView? {
         return floatingPanel.scrollView
     }
 
     // The underlying gesture recognizer for pan gestures
-    @objc public var panGestureRecognizer: UIPanGestureRecognizer {
+    @objc
+    public var panGestureRecognizer: UIPanGestureRecognizer {
         return floatingPanel.panGesture
     }
 
     /// The current position of the floating panel controller's contents.
-    @objc public var position: FloatingPanelPosition {
+    @objc
+    public var position: FloatingPanelPosition {
         return floatingPanel.state
     }
 
@@ -100,7 +106,8 @@ public class FloatingPanelController: UIViewController, UIScrollViewDelegate, UI
 
     /// Initialize a newly created floating panel controller.
     #if __OBJC__
-    @objc public init(delegate: FloatingPanelControllerDelegate? = nil) {
+    @objc
+    public init(delegate: FloatingPanelControllerDelegate? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         setUp()
@@ -420,7 +427,8 @@ public class FloatingPanelController: UIViewController, UIScrollViewDelegate, UI
     /// then it calls `layoutIfNeeded()` of the root view to force the view
     /// to update the floating panel's layout immediately. It can be called in an
     /// animation block.
-    @objc public func updateLayout() {
+    @objc
+    public func updateLayout() {
         reloadLayout(for: traitCollection)
         setUpLayout()
     }
@@ -460,10 +468,12 @@ extension FloatingPanelController {
 }
 
 public extension UIViewController {
-    @objc public func fp_original_dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+    @objc
+    public func fp_original_dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         // Implementation will be replaced by IMP of self.dismiss(animated:completion:)
     }
-    @objc public func fp_dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+    @objc
+    public func fp_dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         // Call dismiss(animated:completion:) to a content view controller
         if let fpc = parent as? FloatingPanelController {
             if fpc.presentingViewController != nil {

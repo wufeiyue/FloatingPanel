@@ -71,7 +71,8 @@ class FloatingPanelPresentationController: UIPresentationController {
         fpc.backdropView.addGestureRecognizer(tapGesture)
     }
 
-    @objc func handleBackdrop(tapGesture: UITapGestureRecognizer) {
+    @objc
+    func handleBackdrop(tapGesture: UITapGestureRecognizer) {
         presentedViewController.dismiss(animated: true, completion: nil)
     }
 }
