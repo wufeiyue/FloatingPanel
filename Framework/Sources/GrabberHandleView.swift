@@ -5,6 +5,7 @@
 
 import UIKit
 
+@available(iOS 10.0, *)
 public class GrabberHandleView: UIView {
     public struct Default {
         public static let width: CGFloat = 36.0

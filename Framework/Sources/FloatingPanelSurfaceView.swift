@@ -8,12 +8,13 @@ import UIKit
 class FloatingPanelSurfaceContentView: UIView {}
 
 /// A view that presents a surface interface in a floating panel.
+@available(iOS 10.0, *)
 public class FloatingPanelSurfaceView: UIView {
 
     /// A GrabberHandleView object displayed at the top of the surface view.
     ///
     /// To use a custom grabber handle, hide this and then add the custom one
-    /// to the surface view at appropirate coordinates.
+    /// to the surface view at appropriate coordinates.
     public var grabberHandle: GrabberHandleView!
 
     /// The height of the grabber bar area
@@ -59,7 +60,19 @@ public class FloatingPanelSurfaceView: UIView {
     /// The color of the surface border.
     public var borderWidth: CGFloat = 0.0  { didSet { setNeedsLayout() } }
 
-    private var backgroundLayer: CAShapeLayer!  { didSet { setNeedsLayout() } }
+
+    /// The view presents an actual surface shape.
+    ///
+    /// It renders the background color, border line and top rounded corners,
+    /// specified by other properties. The reason why they're not be applied to
+    /// a content view directly is because it avoids any side-effects to the
+    /// content view.
+    public var containerView: UIView!
+
+    @available(*, unavailable, renamed: "containerView")
+    public var backgroundView: UIView!
+
+    private var containerViewHeightConstraint: NSLayoutConstraint!
 
     private struct Default {
         public static let grabberTopPadding: CGFloat = 6.0
@@ -79,9 +92,18 @@ public class FloatingPanelSurfaceView: UIView {
         super.backgroundColor = .clear
         self.clipsToBounds = false
 
-        let backgroundLayer = CAShapeLayer()
-        layer.insertSublayer(backgroundLayer, at: 0)
-        self.backgroundLayer = backgroundLayer
+        let containerView = UIView()
+        addSubview(containerView)
+        self.containerView = containerView
+
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerViewHeightConstraint = containerView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1.0)
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 0.0),
+            containerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0.0),
+            containerView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0.0),
+            containerViewHeightConstraint,
+            ])
 
         let grabberHandle = GrabberHandleView()
         addSubview(grabberHandle)
@@ -96,29 +118,30 @@ public class FloatingPanelSurfaceView: UIView {
             ])
     }
 
+    public override func updateConstraints() {
+        super.updateConstraints()
+        containerViewHeightConstraint.constant = bottomOverflow
+    }
+
     public override func layoutSubviews() {
         super.layoutSubviews()
-        log.debug("SurfaceView frame", frame)
+        log.debug("surface view frame = \(frame)")
 
         updateLayers()
         updateContentViewMask()
+        updateBorder()
 
-        contentView?.layer.borderColor = borderColor?.cgColor
-        contentView?.layer.borderWidth = borderWidth
         contentView?.frame = bounds
     }
 
     private func updateLayers() {
-        log.debug("SurfaceView bounds", bounds)
-        
-        var rect = bounds
-        rect.size.height += bottomOverflow // Expand the height for overflow buffer
-        let path = UIBezierPath(roundedRect: rect,
-                                byRoundingCorners: [.topLeft, .topRight],
-                                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
-        backgroundLayer.path = path.cgPath
-        backgroundLayer.fillColor = color?.cgColor
-		
+        containerView.backgroundColor = color
+
+        if cornerRadius != 0.0, containerView.layer.cornerRadius != cornerRadius {
+            containerView.layer.masksToBounds = true
+            containerView.layer.cornerRadius = cornerRadius
+        }
+
         if shadowHidden == false {
             layer.shadowColor = shadowColor.cgColor
             layer.shadowOffset = shadowOffset
@@ -128,26 +151,31 @@ public class FloatingPanelSurfaceView: UIView {
     }
 
     private func updateContentViewMask() {
+        guard
+            cornerRadius != 0.0,
+            containerView.layer.cornerRadius != cornerRadius
+            else { return }
+
         if #available(iOS 11, *) {
             // Don't use `contentView.clipToBounds` because it prevents content view from expanding the height of a subview of it
-            // for the bottom overflow like Auto Layout settings of UIVisualEffectView in Main.storyborad of Example/Maps.
+            // for the bottom overflow like Auto Layout settings of UIVisualEffectView in Main.storyboard of Example/Maps.
             // Because the bottom of contentView must be fit to the bottom of a screen to work the `safeLayoutGuide` of a content VC.
-            let maskLayer = CAShapeLayer()
-            var rect = bounds
-            rect.size.height += bottomOverflow
-            let path = UIBezierPath(roundedRect: rect,
-                                    byRoundingCorners: [.topLeft, .topRight],
-                                    cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
-            maskLayer.path = path.cgPath
-            contentView?.layer.mask = maskLayer
+            containerView.layer.masksToBounds = true
+            containerView.layer.cornerRadius = cornerRadius
+            containerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         } else {
             // Don't use `contentView.layer.mask` because of a UIVisualEffectView issue in iOS 10, https://forums.developer.apple.com/thread/50854
             // Instead, a user can mask the content view manually in an application.
         }
     }
 
+    private func updateBorder() {
+        containerView.layer.borderColor = borderColor?.cgColor
+        containerView.layer.borderWidth = borderWidth
+    }
+
     func add(contentView: UIView) {
-        insertSubview(contentView, belowSubview: grabberHandle)
+        containerView.addSubview(contentView)
         self.contentView = contentView
         /* contentView.frame = bounds */ // MUST NOT: Because the top safe area inset of a content VC will be incorrect.
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -155,7 +183,7 @@ public class FloatingPanelSurfaceView: UIView {
             contentView.topAnchor.constraint(equalTo: topAnchor, constant: 0.0),
             contentView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0.0),
             contentView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0.0),
-            contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0.0),
+            contentView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1.0)
             ])
     }
 }

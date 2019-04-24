@@ -5,6 +5,7 @@
 
 import UIKit
 
+@available(iOS 10.0, *)
 class FloatingPanelModalTransition: NSObject, UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
@@ -21,10 +22,11 @@ class FloatingPanelModalTransition: NSObject, UIViewControllerTransitioningDeleg
     }
 }
 
+@available(iOS 10.0, *)
 class FloatingPanelPresentationController: UIPresentationController {
     override func presentationTransitionWillBegin() {
         // Must call here even if duplicating on in containerViewWillLayoutSubviews()
-        // Because it let the floating panel present correclty with the presentation animation
+        // Because it let the floating panel present correctly with the presentation animation
         addFloatingPanel()
     }
 
@@ -52,14 +54,14 @@ class FloatingPanelPresentationController: UIPresentationController {
 
         /*
          * Layout the views managed by `FloatingPanelController` here for the
-         * sake of the presentation and disimissal modally from the controller.
+         * sake of the presentation and dismissal modally from the controller.
          */
         addFloatingPanel()
 
         // Forward touch events to the presenting view controller
         (fpc.view as? FloatingPanelPassThroughView)?.eventForwardingView = presentingViewController.view
 
-        // Set tap-to-dimiss in the backdrop view
+        // Set tap-to-dismiss in the backdrop view
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleBackdrop(tapGesture:)))
         fpc.backdropView.addGestureRecognizer(tapGesture)
     }
@@ -80,6 +82,7 @@ class FloatingPanelPresentationController: UIPresentationController {
     }
 }
 
+@available(iOS 10.0, *)
 class FloatingPanelModalPresentTransition: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         guard
@@ -101,6 +104,7 @@ class FloatingPanelModalPresentTransition: NSObject, UIViewControllerAnimatedTra
     }
 }
 
+@available(iOS 10.0, *)
 class FloatingPanelModalDismissTransition: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         guard
