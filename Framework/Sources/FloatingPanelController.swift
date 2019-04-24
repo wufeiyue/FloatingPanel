@@ -354,12 +354,8 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
             parent.view.addSubview(self.view)
         }
 
-        #if swift(>=4.2)
         parent.addChild(self)
-        #else
-        parent.addChild(self)
-        #endif
-
+        
         view.frame = parent.view.bounds // Needed for a correct safe area configuration
         view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -371,11 +367,7 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
 
         show(animated: animated) { [weak self] in
             guard let `self` = self else { return }
-            #if swift(>=4.2)
             self.didMove(toParent: self)
-            #else
-            self.didMove(toParent: self)
-            #endif
         }
     }
 
@@ -391,20 +383,12 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
 
         hide(animated: animated) { [weak self] in
             guard let `self` = self else { return }
-            #if swift(>=4.2)
             self.willMove(toParent: nil)
-            #else
-            self.willMove(toParent: nil)
-            #endif
 
             self.view.removeFromSuperview()
 
-            #if swift(>=4.2)
             self.removeFromParent()
-            #else
-            self.removeFromParent()
-            #endif
-
+            
             completion?()
         }
     }
@@ -422,36 +406,20 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
     /// Sets the view controller responsible for the content portion of the floating panel.
     public func set(contentViewController: UIViewController?) {
         if let vc = _contentViewController {
-            #if swift(>=4.2)
             vc.willMove(toParent: nil)
-            #else
-            vc.willMove(toParent: nil)
-            #endif
 
             vc.view.removeFromSuperview()
 
-            #if swift(>=4.2)
             vc.removeFromParent()
-            #else
-            vc.removeFromParent()
-            #endif
         }
 
         if let vc = contentViewController {
-            #if swift(>=4.2)
             addChild(vc)
-            #else
-            addChild(vc)
-            #endif
 
             let surfaceView = floatingPanel.surfaceView
             surfaceView.add(contentView: vc.view)
 
-            #if swift(>=4.2)
             vc.didMove(toParent: self)
-            #else
-            vc.didMove(toParent: self)
-            #endif
         }
 
         _contentViewController = contentViewController
@@ -490,15 +458,9 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
             if #available(iOS 11.0, *) {
                 scrollView.contentInsetAdjustmentBehavior = .never
             } else {
-                #if swift(>=4.2)
                 children.forEach { (vc) in
                     vc.automaticallyAdjustsScrollViewInsets = false
                 }
-                #else
-                children.forEach { (vc) in
-                    vc.automaticallyAdjustsScrollViewInsets = false
-                }
-                #endif
             }
         default:
             break
