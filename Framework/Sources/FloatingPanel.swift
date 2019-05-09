@@ -129,11 +129,10 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
                 case (let from, let to):
                     animator = behavior.moveAnimator(self.viewcontroller, from: from, to: to)
                 }
-                
+
                 self.animator = animator
             }
             else {
-                //TODO:
                 let animator: CustomPropertyAnimator
                 switch (from, to) {
                 case (.hidden, let to):
@@ -487,28 +486,15 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         if (surfaceView.frame.minY <= layoutAdapter.topY) {
             if !disabledBottomAutoLayout {
                 viewcontroller.contentViewController?.view?.constraints.forEach({ (const) in
-                    if #available(iOS 10, *) {
-                        switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
-                        case const.firstAnchor:
-                            (const.secondItem as? UIView)?.disableAutoLayout()
-                            const.isActive = false
-                        case const.secondAnchor:
-                            (const.firstItem as? UIView)?.disableAutoLayout()
-                            const.isActive = false
-                        default:
-                            break
-                        }
-                    }
-                    else {
-                        //TODO: 没有测试
-                        if const.firstAttribute == .bottom {
-                            (const.secondItem as? UIView)?.disableAutoLayout()
-                            const.isActive = false
-                        }
-                        else if const.secondAttribute == .bottom {
-                            (const.firstItem as? UIView)?.disableAutoLayout()
-                            const.isActive = false
-                        }
+                    switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
+                    case const._firstAnchor:
+                        (const.secondItem as? UIView)?.disableAutoLayout()
+                        const.isActive = false
+                    case const._secondAnchor:
+                        (const.firstItem as? UIView)?.disableAutoLayout()
+                        const.isActive = false
+                    default:
+                        break
                     }
                 })
             }
@@ -516,28 +502,15 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         } else {
             if disabledBottomAutoLayout {
                 viewcontroller.contentViewController?.view?.constraints.forEach({ (const) in
-                    if #available(iOS 10, *) {
-                        switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
-                        case const.firstAnchor:
-                            (const.secondItem as? UIView)?.enableAutoLayout()
-                            const.isActive = true
-                        case const.secondAnchor:
-                            (const.firstItem as? UIView)?.enableAutoLayout()
-                            const.isActive = true
-                        default:
-                            break
-                        }
-                    }
-                    else {
-                        //TODO: 没有测试
-                        if const.firstAttribute == .bottom {
-                            (const.secondItem as? UIView)?.enableAutoLayout()
-                            const.isActive = true
-                        }
-                        else if const.secondAttribute == .bottom {
-                            (const.firstItem as? UIView)?.enableAutoLayout()
-                            const.isActive = true
-                        }
+                    switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
+                    case const._firstAnchor:
+                        (const.secondItem as? UIView)?.enableAutoLayout()
+                        const.isActive = true
+                    case const._secondAnchor:
+                        (const.firstItem as? UIView)?.enableAutoLayout()
+                        const.isActive = true
+                    default:
+                        break
                     }
                 })
             }
@@ -624,11 +597,10 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
             self.animator = animator
         }
         else {
-            //TODO:
             let animator = self.behavior.removalInteractionCustomAnimator(self.viewcontroller, with: velocityVector)
             self.animator = animator
         }
-        
+    
         animator?.addAnimations { [weak self] in
             self?.updateLayout(to: .hidden)
         }
@@ -703,11 +675,10 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
             self.animator = animator
         }
         else {
-            //TODO:
             let animator = behavior.interactionCustomAnimator(self.viewcontroller, to: targetPosition, with: velocityVector)
             self.animator = animator
         }
-        
+    
         animator?.addAnimations { [weak self] in
             guard let `self` = self else { return }
             self.state = targetPosition
@@ -1009,6 +980,34 @@ class FloatingPanelPanGestureRecognizer: UIPanGestureRecognizer {
                 return
             }
             super.delegate = newValue
+        }
+    }
+}
+
+extension NSLayoutConstraint {
+    
+    var _firstAnchor: NSLayoutAnchor<AnyObject>? {
+        if #available(iOS 10, *) {
+            return firstAnchor
+        }
+        else {
+            if let object = perform(NSSelectorFromString("firstAnchor")) {
+                let anchor = object.takeRetainedValue()
+                return unsafeBitCast(anchor, to: NSLayoutAnchor<AnyObject>.self)
+            }
+            return nil
+        }
+    }
+    
+    var _secondAnchor: NSLayoutAnchor<AnyObject>? {
+        if #available(iOS 10, *) {
+            return secondAnchor
+        } else {
+            if let object = perform(NSSelectorFromString("secondAnchor")) {
+                let anchor = object.takeRetainedValue()
+                return unsafeBitCast(anchor, to: NSLayoutAnchor<AnyObject>.self)
+            }
+            return nil
         }
     }
 }

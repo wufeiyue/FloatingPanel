@@ -231,7 +231,7 @@ public class CustomPropertyAnimator: PropertyAnimator {
     
     func startAnimation() {
         if let unwrappedInitialVelocity = initialVelocity {
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .allowUserInteraction, animations: animatedRuningCompletion) { _ in
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: unwrappedInitialVelocity.dy, options: .allowUserInteraction, animations: animatedRuningCompletion) { _ in
                 self.animatedCompletion?()
             }
         }

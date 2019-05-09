@@ -111,10 +111,10 @@ class FloatingPanelModalPresentTransition: NSObject, UIViewControllerAnimatedTra
 
 class FloatingPanelModalDismissTransition: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        guard
-            let fpc = transitionContext?.viewController(forKey: .from) as? FloatingPanelController
-        else { fatalError()}
         if #available(iOS 10, *) {
+            guard let fpc = transitionContext?.viewController(forKey: .from) as? FloatingPanelController else {
+                fatalError()
+            }
             let animator = fpc.behavior.removeAnimator(fpc, from: fpc.position)
             return TimeInterval(animator.duration)
         }
