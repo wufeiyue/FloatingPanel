@@ -94,6 +94,7 @@ extension UIScrollView {
     }
 }
 
+
 @available(iOS 10.0, *)
 extension UISpringTimingParameters {
     public convenience init(dampingRatio: CGFloat, frequencyResponse: CGFloat, initialVelocity: CGVector = .zero) {

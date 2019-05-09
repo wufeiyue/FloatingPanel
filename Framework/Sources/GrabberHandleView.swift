@@ -5,12 +5,12 @@
 
 import UIKit
 
-@available(iOS 10.0, *)
+
 public class GrabberHandleView: UIView {
     public struct Default {
         public static let width: CGFloat = 36.0
         public static let height: CGFloat = 5.0
-        public static let barColor = UIColor(displayP3Red: 0.76, green: 0.77, blue: 0.76, alpha: 1.0)
+        public static let barColor = UIColor(red: 0.76, green: 0.77, blue: 0.76, alpha: 1.0)
     }
 
     required public init?(coder aDecoder: NSCoder) {

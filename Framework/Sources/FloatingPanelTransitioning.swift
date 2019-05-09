@@ -5,7 +5,7 @@
 
 import UIKit
 
-@available(iOS 10.0, *)
+
 class FloatingPanelModalTransition: NSObject, UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
@@ -22,7 +22,7 @@ class FloatingPanelModalTransition: NSObject, UIViewControllerTransitioningDeleg
     }
 }
 
-@available(iOS 10.0, *)
+
 class FloatingPanelPresentationController: UIPresentationController {
     override func presentationTransitionWillBegin() {
         // Must call here even if duplicating on in containerViewWillLayoutSubviews()
@@ -82,15 +82,19 @@ class FloatingPanelPresentationController: UIPresentationController {
     }
 }
 
-@available(iOS 10.0, *)
+
 class FloatingPanelModalPresentTransition: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         guard
             let fpc = transitionContext?.viewController(forKey: .to) as? FloatingPanelController
         else { fatalError()}
-
-        let animator = fpc.behavior.addAnimator(fpc, to: fpc.layout.initialPosition)
-        return TimeInterval(animator.duration)
+        if #available(iOS 10, *) {
+            let animator = fpc.behavior.addAnimator(fpc, to: fpc.layout.initialPosition)
+            return TimeInterval(animator.duration)
+        }
+        else {
+            return 0.25
+        }
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -104,15 +108,19 @@ class FloatingPanelModalPresentTransition: NSObject, UIViewControllerAnimatedTra
     }
 }
 
-@available(iOS 10.0, *)
+
 class FloatingPanelModalDismissTransition: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         guard
             let fpc = transitionContext?.viewController(forKey: .from) as? FloatingPanelController
         else { fatalError()}
-
-        let animator = fpc.behavior.removeAnimator(fpc, from: fpc.position)
-        return TimeInterval(animator.duration)
+        if #available(iOS 10, *) {
+            let animator = fpc.behavior.removeAnimator(fpc, from: fpc.position)
+            return TimeInterval(animator.duration)
+        }
+        else {
+            return 0.25
+        }
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {

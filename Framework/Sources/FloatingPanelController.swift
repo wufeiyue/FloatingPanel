@@ -5,7 +5,7 @@
 
 import UIKit
 
-@available(iOS 10.0, *)
+
 public protocol FloatingPanelControllerDelegate: class {
     // if it returns nil, FloatingPanelController uses the default layout
     func floatingPanel(_ vc: FloatingPanelController, layoutFor newCollection: UITraitCollection) -> FloatingPanelLayout?
@@ -38,7 +38,7 @@ public protocol FloatingPanelControllerDelegate: class {
     func floatingPanel(_ vc: FloatingPanelController, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool
 }
 
-@available(iOS 10.0, *)
+
 public extension FloatingPanelControllerDelegate {
     func floatingPanel(_ vc: FloatingPanelController, layoutFor newCollection: UITraitCollection) -> FloatingPanelLayout? {
         return nil
@@ -75,7 +75,7 @@ public enum FloatingPanelPosition: Int {
 ///
 /// A container view controller to display a floating panel to present contents in parallel as a user wants.
 ///
-@available(iOS 10.0, *)
+
 open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     /// Constants indicating how safe area insets are added to the adjusted content inset.
     public enum ContentInsetAdjustmentBehavior: Int {
@@ -246,7 +246,12 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
     }
 
     private func fetchBehavior(for traitCollection: UITraitCollection) -> FloatingPanelBehavior {
-        return self.delegate?.floatingPanel(self, behaviorFor: traitCollection) ?? FloatingPanelDefaultBehavior()
+        if #available(iOS 10, *) {
+            return self.delegate?.floatingPanel(self, behaviorFor: traitCollection) ?? FloatingPanelDefaultBehavior()
+        }
+        else {
+            return self.delegate?.floatingPanel(self, behaviorFor: traitCollection) ?? FloatingPanelLowBehavior()
+        }
     }
 
     private func update(safeAreaInsets: UIEdgeInsets) {
@@ -496,7 +501,7 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
     }
 }
 
-@available(iOS 10.0, *)
+
 extension FloatingPanelController {
     private static let dismissSwizzling: Any? = {
         let aClass: AnyClass! = UIViewController.self //object_getClass(vc)
@@ -514,7 +519,7 @@ extension FloatingPanelController {
     }()
 }
 
-@available(iOS 10.0, *)
+
 public extension UIViewController {
     @objc func fp_original_dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         // Implementation will be replaced by IMP of self.dismiss(animated:completion:)

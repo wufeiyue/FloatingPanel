@@ -8,7 +8,27 @@ import UIKit.UIGestureRecognizerSubclass // For Xcode 9.4.1
 ///
 /// FloatingPanel presentation model
 ///
+
+protocol PropertyAnimator: class {
+    var isInterruptible: Bool { set get }
+    func addAnimations(_ animation: @escaping () -> Void)
+    func addCompletion(_ completion: @escaping () -> Void)
+    func startAnimation()
+    func stopAnimation(_ withoutFinishing: Bool)
+    func finishAnimation()
+}
+
 @available(iOS 10.0, *)
+extension UIViewPropertyAnimator: PropertyAnimator {
+    func finishAnimation() {
+        finishAnimation(at: .current)
+    }
+    
+    func addCompletion(_ completion: @escaping () -> Void) {
+        addCompletion { _ in completion() }
+    }
+}
+
 class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate {
     // MUST be a weak reference to prevent UI freeze on the presentation modally
     weak var viewcontroller: FloatingPanelController!
@@ -39,7 +59,7 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
     let panGestureRecognizer: FloatingPanelPanGestureRecognizer
     var isRemovalInteractionEnabled: Bool = false
 
-    fileprivate var animator: UIViewPropertyAnimator?
+    fileprivate var animator: PropertyAnimator?
 
     private var initialFrame: CGRect = .zero
     private var initialTranslationY: CGFloat = 0
@@ -98,29 +118,48 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         tearDownActiveInteraction()
 
         if animated {
-            let animator: UIViewPropertyAnimator
-            switch (from, to) {
-            case (.hidden, let to):
-                animator = behavior.addAnimator(self.viewcontroller, to: to)
-            case (let from, .hidden):
-                animator = behavior.removeAnimator(self.viewcontroller, from: from)
-            case (let from, let to):
-                animator = behavior.moveAnimator(self.viewcontroller, from: from, to: to)
+            
+            if #available(iOS 10, *) {
+                let animator: UIViewPropertyAnimator
+                switch (from, to) {
+                case (.hidden, let to):
+                    animator = behavior.addAnimator(self.viewcontroller, to: to)
+                case (let from, .hidden):
+                    animator = behavior.removeAnimator(self.viewcontroller, from: from)
+                case (let from, let to):
+                    animator = behavior.moveAnimator(self.viewcontroller, from: from, to: to)
+                }
+                
+                self.animator = animator
+            }
+            else {
+                //TODO:
+                let animator: CustomPropertyAnimator
+                switch (from, to) {
+                case (.hidden, let to):
+                    animator = behavior.addCustomAnimator(self.viewcontroller, to: to)
+                case (let from, .hidden):
+                    animator = behavior.removeCustomAnimator(self.viewcontroller, from: from)
+                case (let from, let to):
+                    animator = behavior.moveCustomAnimator(self.viewcontroller, from: from, to: to)
+                }
+                
+                self.animator = animator
             }
 
-            animator.addAnimations { [weak self] in
+            animator?.addAnimations { [weak self] in
                 guard let `self` = self else { return }
 
                 self.state = to
                 self.updateLayout(to: to)
             }
-            animator.addCompletion { [weak self] _ in
+            animator?.addCompletion { [weak self] in
                 guard let `self` = self else { return }
                 self.animator = nil
                 completion?()
             }
-            self.animator = animator
-            animator.startAnimation()
+            
+            animator?.startAnimation()
         } else {
             self.state = to
             self.updateLayout(to: to)
@@ -302,7 +341,7 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
                 log.debug("panel animation interrupted!!!")
                 if animator.isInterruptible {
                     animator.stopAnimation(false)
-                    animator.finishAnimation(at: .current)
+                    animator.finishAnimation()
                 }
 
                 self.animator = nil
@@ -448,15 +487,28 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         if (surfaceView.frame.minY <= layoutAdapter.topY) {
             if !disabledBottomAutoLayout {
                 viewcontroller.contentViewController?.view?.constraints.forEach({ (const) in
-                    switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
-                    case const.firstAnchor:
-                        (const.secondItem as? UIView)?.disableAutoLayout()
-                        const.isActive = false
-                    case const.secondAnchor:
-                        (const.firstItem as? UIView)?.disableAutoLayout()
-                        const.isActive = false
-                    default:
-                        break
+                    if #available(iOS 10, *) {
+                        switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
+                        case const.firstAnchor:
+                            (const.secondItem as? UIView)?.disableAutoLayout()
+                            const.isActive = false
+                        case const.secondAnchor:
+                            (const.firstItem as? UIView)?.disableAutoLayout()
+                            const.isActive = false
+                        default:
+                            break
+                        }
+                    }
+                    else {
+                        //TODO: 没有测试
+                        if const.firstAttribute == .bottom {
+                            (const.secondItem as? UIView)?.disableAutoLayout()
+                            const.isActive = false
+                        }
+                        else if const.secondAttribute == .bottom {
+                            (const.firstItem as? UIView)?.disableAutoLayout()
+                            const.isActive = false
+                        }
                     }
                 })
             }
@@ -464,15 +516,28 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         } else {
             if disabledBottomAutoLayout {
                 viewcontroller.contentViewController?.view?.constraints.forEach({ (const) in
-                    switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
-                    case const.firstAnchor:
-                        (const.secondItem as? UIView)?.enableAutoLayout()
-                        const.isActive = true
-                    case const.secondAnchor:
-                        (const.firstItem as? UIView)?.enableAutoLayout()
-                        const.isActive = true
-                    default:
-                        break
+                    if #available(iOS 10, *) {
+                        switch viewcontroller.contentViewController?.layoutGuide.bottomAnchor {
+                        case const.firstAnchor:
+                            (const.secondItem as? UIView)?.enableAutoLayout()
+                            const.isActive = true
+                        case const.secondAnchor:
+                            (const.firstItem as? UIView)?.enableAutoLayout()
+                            const.isActive = true
+                        default:
+                            break
+                        }
+                    }
+                    else {
+                        //TODO: 没有测试
+                        if const.firstAttribute == .bottom {
+                            (const.secondItem as? UIView)?.enableAutoLayout()
+                            const.isActive = true
+                        }
+                        else if const.secondAttribute == .bottom {
+                            (const.firstItem as? UIView)?.enableAutoLayout()
+                            const.isActive = true
+                        }
                     }
                 })
             }
@@ -553,17 +618,28 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
     }
 
     private func startRemovalAnimation(with velocityVector: CGVector, completion: (() -> Void)?) {
-        let animator = self.behavior.removalInteractionAnimator(self.viewcontroller, with: velocityVector)
-
-        animator.addAnimations { [weak self] in
+        
+        if #available(iOS 10, *) {
+            let animator = self.behavior.removalInteractionAnimator(self.viewcontroller, with: velocityVector)
+            self.animator = animator
+        }
+        else {
+            //TODO:
+            let animator = self.behavior.removalInteractionCustomAnimator(self.viewcontroller, with: velocityVector)
+            self.animator = animator
+        }
+        
+        animator?.addAnimations { [weak self] in
             self?.updateLayout(to: .hidden)
         }
-        animator.addCompletion({ _ in
+        
+        animator?.addCompletion({
             self.animator = nil
             completion?()
         })
-        self.animator = animator
-        animator.startAnimation()
+        
+        animator?.startAnimation()
+        
     }
 
     private func startInteraction(with translation: CGPoint, at location: CGPoint) {
@@ -621,18 +697,29 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
         viewcontroller.delegate?.floatingPanelWillBeginDecelerating(viewcontroller)
 
         let velocityVector = (distance != 0) ? CGVector(dx: 0, dy: min(abs(velocity.y)/distance, 30.0)) : .zero
-        let animator = behavior.interactionAnimator(self.viewcontroller, to: targetPosition, with: velocityVector)
-        animator.addAnimations { [weak self] in
+        
+        if #available(iOS 10, *) {
+            let animator = behavior.interactionAnimator(self.viewcontroller, to: targetPosition, with: velocityVector)
+            self.animator = animator
+        }
+        else {
+            //TODO:
+            let animator = behavior.interactionCustomAnimator(self.viewcontroller, to: targetPosition, with: velocityVector)
+            self.animator = animator
+        }
+        
+        animator?.addAnimations { [weak self] in
             guard let `self` = self else { return }
             self.state = targetPosition
             self.updateLayout(to: targetPosition)
         }
-        animator.addCompletion { [weak self] pos in
+        
+        animator?.addCompletion { [weak self] in
             guard let `self` = self else { return }
             self.finishAnimation(at: targetPosition)
         }
-        self.animator = animator
-        animator.startAnimation()
+        
+        animator?.startAnimation()
     }
 
     private func finishAnimation(at targetPosition: FloatingPanelPosition) {
@@ -900,7 +987,7 @@ class FloatingPanel: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate
     }
 }
 
-@available(iOS 10.0, *)
+
 class FloatingPanelPanGestureRecognizer: UIPanGestureRecognizer {
     fileprivate weak var floatingPanel: FloatingPanel?
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {

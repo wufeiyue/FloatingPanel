@@ -5,7 +5,6 @@
 
 import UIKit
 
-@available(iOS 10.0, *)
 public protocol FloatingPanelBehavior {
     /// Asks the behavior object if the floating panel should project a momentum of a user interaction to move the proposed position.
     ///
@@ -24,26 +23,38 @@ public protocol FloatingPanelBehavior {
     func redirectionalProgress(_ fpc: FloatingPanelController, from: FloatingPanelPosition, to: FloatingPanelPosition) -> CGFloat
 
     /// Returns a UIViewPropertyAnimator object to project a floating panel to a position on finger up if the user dragged.
+    @available(iOS 10.0, *)
     func interactionAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> UIViewPropertyAnimator
+    
+    func interactionCustomAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> CustomPropertyAnimator
 
     /// Returns a UIViewPropertyAnimator object to add a floating panel to a position.
     ///
     /// Its animator instance will be used to animate the surface view in `FloatingPanelController.addPanel(toParent:belowView:animated:)`.
     /// Default is an animator with ease-in-out curve and 0.25 sec duration.
+    @available(iOS 10.0, *)
     func addAnimator(_ fpc: FloatingPanelController, to: FloatingPanelPosition) -> UIViewPropertyAnimator
+    
+    func addCustomAnimator(_ fpc: FloatingPanelController, to: FloatingPanelPosition) -> CustomPropertyAnimator
 
     /// Returns a UIViewPropertyAnimator object to remove a floating panel from a position.
     ///
     /// Its animator instance will be used to animate the surface view in `FloatingPanelController.removePanelFromParent(animated:completion:)`.
     /// Default is an animator with ease-in-out curve and 0.25 sec duration.
+    @available(iOS 10.0, *)
     func removeAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition) -> UIViewPropertyAnimator
+    
+    func removeCustomAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition) -> CustomPropertyAnimator
 
     /// Returns a UIViewPropertyAnimator object to move a floating panel from a position to a position.
     ///
     /// Its animator instance will be used to animate the surface view in `FloatingPanelController.move(to:animated:completion:)`.
     /// Default is an animator with ease-in-out curve and 0.25 sec duration.
+    @available(iOS 10.0, *)
     func moveAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition, to: FloatingPanelPosition) -> UIViewPropertyAnimator
 
+    func moveCustomAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition, to: FloatingPanelPosition) -> CustomPropertyAnimator
+    
     /// Returns a y-axis velocity to invoke a removal interaction at the bottom position.
     ///
     /// Default is 10.0. This method is called when FloatingPanelController.isRemovalInteractionEnabled is true.
@@ -57,10 +68,12 @@ public protocol FloatingPanelBehavior {
     /// Returns a UIViewPropertyAnimator object to remove a floating panel with a velocity interactively at the bottom position.
     ///
     /// Default is a spring animator with 1.0 damping ratio. This method is called when FloatingPanelController.isRemovalInteractionEnabled is true.
+    @available(iOS 10.0, *)
     func removalInteractionAnimator(_ fpc: FloatingPanelController, with velocity: CGVector) -> UIViewPropertyAnimator
+    
+    func removalInteractionCustomAnimator(_ fpc: FloatingPanelController, with velocity: CGVector) -> CustomPropertyAnimator
 }
 
-@available(iOS 10.0, *)
 public extension FloatingPanelBehavior {
     func shouldProjectMomentum(_ fpc: FloatingPanelController, for proposedTargetPosition: FloatingPanelPosition) -> Bool {
         switch (fpc.position, proposedTargetPosition) {
@@ -81,20 +94,40 @@ public extension FloatingPanelBehavior {
         return 0.5
     }
 
+    @available(iOS 10.0, *)
     func interactionAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> UIViewPropertyAnimator {
         return defaultBehavior.interactionAnimator(fpc, to: targetPosition, with: velocity)
     }
+    
+    func interactionCustomAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> CustomPropertyAnimator {
+        return defaultLowBehavior.interactionAnimator(fpc, to: targetPosition, with: velocity)
+    }
 
+    @available(iOS 10.0, *)
     func addAnimator(_ fpc: FloatingPanelController, to: FloatingPanelPosition) -> UIViewPropertyAnimator {
         return UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut)
     }
+    
+    func addCustomAnimator(_ fpc: FloatingPanelController, to: FloatingPanelPosition) -> CustomPropertyAnimator {
+        return CustomPropertyAnimator(duration: 0.25, curve: .curveEaseInOut)
+    }
 
+    @available(iOS 10.0, *)
     func removeAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition) -> UIViewPropertyAnimator {
         return UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut)
     }
+    
+    func removeCustomAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition) -> CustomPropertyAnimator {
+        return CustomPropertyAnimator(duration: 0.25, curve: .curveEaseInOut)
+    }
 
+    @available(iOS 10.0, *)
     func moveAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition, to: FloatingPanelPosition) -> UIViewPropertyAnimator {
         return UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut)
+    }
+    
+    func moveCustomAnimator(_ fpc: FloatingPanelController, from: FloatingPanelPosition, to: FloatingPanelPosition) -> CustomPropertyAnimator {
+        return CustomPropertyAnimator(duration: 0.25, curve: .curveEaseInOut)
     }
 
     var removalVelocity: CGFloat {
@@ -105,12 +138,18 @@ public extension FloatingPanelBehavior {
         return 0.5
     }
 
+    @available(iOS 10.0, *)
     func removalInteractionAnimator(_ fpc: FloatingPanelController, with velocity: CGVector) -> UIViewPropertyAnimator {
         log.debug("velocity", velocity)
         let timing = UISpringTimingParameters(dampingRatio: 1.0,
                                         frequencyResponse: 0.3,
                                         initialVelocity: velocity)
         return UIViewPropertyAnimator(duration: 0, timingParameters: timing)
+    }
+    
+    func removalInteractionCustomAnimator(_ fpc: FloatingPanelController, with velocity: CGVector) -> CustomPropertyAnimator {
+        log.debug("velocity", velocity)
+        return CustomPropertyAnimator(velocity: velocity)
     }
 }
 
@@ -145,4 +184,71 @@ public class FloatingPanelDefaultBehavior: FloatingPanelBehavior {
             return 1.0
         }
     }
+}
+
+private let defaultLowBehavior = FloatingPanelLowBehavior()
+
+public class FloatingPanelLowBehavior: FloatingPanelBehavior {
+    
+    //TODO:
+    
+    public func interactionAnimator(_ fpc: FloatingPanelController, to targetPosition: FloatingPanelPosition, with velocity: CGVector) -> CustomPropertyAnimator {
+        let animator = CustomPropertyAnimator(velocity: velocity)
+        animator.isInterruptible = false
+        return animator
+    }
+}
+
+public class CustomPropertyAnimator: PropertyAnimator {
+    
+    private var animatedCompletion: (() -> Void)?
+    private var animatedRuningCompletion: (() -> Void)!
+    
+    var duration: TimeInterval = 0.25
+    var curve: UIView.AnimationOptions = .curveEaseOut
+    
+    var isInterruptible: Bool = false
+    
+    //有弹簧动画是需要
+    var initialVelocity: CGVector?
+    
+    public init(duration: TimeInterval, curve: UIView.AnimationOptions) {
+        self.duration = duration
+        self.curve = curve
+    }
+    
+    public init(velocity: CGVector) {
+        self.initialVelocity = velocity
+    }
+    
+    func addAnimations(_ animation: @escaping () -> Void) {
+        animatedRuningCompletion = animation
+    }
+    
+    func addCompletion(_ completion: @escaping () -> Void) {
+        animatedCompletion = completion
+    }
+    
+    func startAnimation() {
+        if let unwrappedInitialVelocity = initialVelocity {
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .allowUserInteraction, animations: animatedRuningCompletion) { _ in
+                self.animatedCompletion?()
+            }
+        }
+        else {
+            UIView.animate(withDuration: duration, delay: 0, options: curve, animations: animatedRuningCompletion) { (_) in
+                self.animatedCompletion?()
+            }
+        }
+    }
+    
+    func stopAnimation(_ withoutFinishing: Bool) {
+        
+    }
+    
+    func finishAnimation() {
+        
+    }
+    
+    
 }

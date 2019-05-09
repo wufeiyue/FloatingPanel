@@ -6,14 +6,13 @@
 import Foundation
 import os.log
 
-@available(iOS 10.0, *)
 var log = {
     return Logger()
 }()
 
-@available(iOS 10.0, *)
 struct Logger {
-    private let osLog: OSLog
+    
+    private var osLog: Any?
     private let s = DispatchSemaphore(value: 1)
 
     private enum Level: Int, Comparable {
@@ -34,6 +33,7 @@ struct Logger {
                 return "Error:"
             }
         }
+        
         @available(iOS 10.0, *)
         var osLogType: OSLogType {
             switch self {
@@ -50,7 +50,9 @@ struct Logger {
     }
 
     fileprivate init() {
-        osLog = OSLog(subsystem: "com.scenee.FloatingPanel", category: "FloatingPanel")
+        if #available(iOS 10.0, *) {
+            osLog = OSLog(subsystem: "com.scenee.FloatingPanel", category: "FloatingPanel")
+        }
     }
 
     private func log(_ level: Level, _ message: Any, _ arguments: [Any], function: String, line: UInt) {
@@ -67,7 +69,11 @@ struct Logger {
             }
         }()
 
-        os_log("%@", log: osLog, type: level.osLogType, log)
+        if #available(iOS 10.0, *) {
+            os_log("%@", log: osLog as! OSLog, type: level.osLogType, log)
+        } else {
+            debugPrint(log)
+        }
     }
 
     private func getPrettyFunction(_ function: String, _ file: String) -> String {

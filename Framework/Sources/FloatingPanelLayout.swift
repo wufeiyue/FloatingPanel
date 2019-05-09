@@ -130,7 +130,7 @@ public class FloatingPanelDefaultLandscapeLayout: FloatingPanelLayout {
     }
 }
 
-@available(iOS 10.0, *)
+
 class FloatingPanelLayoutAdapter {
     weak var vc: UIViewController!
     private weak var surfaceView: FloatingPanelSurfaceView!
